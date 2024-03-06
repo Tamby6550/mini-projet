@@ -10,3 +10,6 @@ protected function getAnnotations_ReaderService()
 
     return $instance;
 }
+
+
+php bin/console doctrine:schema:update --force
