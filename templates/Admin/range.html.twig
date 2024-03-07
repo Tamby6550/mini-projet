@@ -1,0 +1,11 @@
+{% block range_field_widget %}
+    <input type="range"
+           id="{{ form.vars.id }}"
+           name="{{ form.vars.full_name }}"
+           value="{{ value }}"
+           min="{{ attr.min }}"
+           max="{{ attr.max }}"
+           step="{{ attr.step }}"
+           class="custom-range"
+    />
+{% endblock %}

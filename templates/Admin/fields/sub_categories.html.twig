@@ -1,0 +1,8 @@
+<div class="sub-categorie-admin" style=" display: flex;">
+	{% for subCategorie in entity.instance.SubCategories %}
+		{% if loop.index > 1 %} <span class="mx-1">;</span>{% endif %}
+		<div class="each-sub-categorie p-1" style="background-color: #3eafc7;color: white;border-radius: 3px;">
+			{{subCategorie.subcategName}}
+		</div>
+	{% endfor %}
+</div>

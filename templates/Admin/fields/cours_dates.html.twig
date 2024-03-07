@@ -1,0 +1,47 @@
+{% set nearestDate = entity.instance.getNearestDateAfterToday() %}
+<h2>Liste promotions</h2>
+<hr>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Date provisoire</th>
+			<th scope="col">Date définitive</th>
+			<th scope="col">Quorum</th>
+			<th scope="col">Durée</th>
+			<th scope="col">Nombre inscrits</th>
+			<th scope="col">Etat</th>
+			<th scope="col">#</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for coursDate in entity.instance.coursDates %}
+			<tr {% if coursDate.definitiveStartDate == nearestDate %} class="nearest-date" {% endif %}>
+				<th scope="row">{{ loop.index }}</th>
+				<td>{{ coursDate.provisionalStartDate|date('d/m/Y') }}</td>
+				<td>{{ coursDate.definitiveStartDate|date('d/m/Y') }}</td>
+				<td>{{ coursDate.quorum }}</td>
+				<td>{{ coursDate.duration }}</td>
+				<td>{{ coursDate.numberOfTrainees }}</td>
+				<td>
+					{% if coursDate.stateCoursDatesCount == 0 %}
+						<span style="color: #777272;background-color: #ededed;padding: 5px;border-radius: 4px;">Cours en attente</span>
+					{% elseif coursDate.stateCoursDatesCount == 1 %}
+						<span style="color: #00cc00;font-weight: 500;padding: 5px;background-color: #d9ffd9;border-radius: 5px;">Cours commencé</span>
+					{% elseif coursDate.stateCoursDatesCount == 2 %}
+						<span style="color: #cc0000; font-weight: 500; padding: 5px; background-color: #ffd9d9;border-radius: 5px;">Cours déjà expiré</span>
+					{% else %}
+						<span style="color: #ff0000; font-weight: 500; padding: 5px; background-color: #ffcfcf;">Erreur</span>
+					{% endif %}
+				</td>
+				<td>
+					{% if coursDate.definitiveStartDate == nearestDate %}
+						<span style="color: #777272;background-color: #ededed;padding: 5px;border-radius: 4px;">Date la plus proche</span>
+					{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+
+
+	</tbody>
+</table>

@@ -44,13 +44,13 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
     public function getCredentials(Request $request)
     {
         $credentials = [
-            'username' => $request->request->get('username'),
+            'email' => $request->request->get('email'),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
             Security::LAST_USERNAME,
-            $credentials['username']
+            $credentials['email']
         );
 
         return $credentials;
@@ -63,7 +63,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(Users::class)->findOneBy(['username' => $credentials['username']]);
+        $user = $this->entityManager->getRepository(Users::class)->findOneBy(['email' => $credentials['email']]);
 
         if (!$user) {
             throw new UsernameNotFoundException('Username could not be found.');
@@ -76,8 +76,22 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
     {
         // Check the user's password or other credentials and return true or false
         // If there are no credentials to check, you can just return true
-        throw new \Exception('TODO: check the credentials inside '.__FILE__);
+
+        // Assuming $credentials['password'] contains the plaintext password the user submitted
+        $plainPassword = $credentials['password'];
+
+        // Assuming $user->getPassword() returns the hashed password
+        $hashedPassword = $user->getPassword();
+
+        if ($plainPassword===$hashedPassword) {
+            // The passwords match, return true
+            return true;
+        } 
+        
+        // The passwords do not match, return false
+        return false;
     }
+
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
@@ -85,8 +99,16 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse('/');
-        // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        // Récupérer l'utilisateur
+        $user = $token->getUser();
+
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            // Rediriger vers la page admin
+            return new RedirectResponse($this->urlGenerator->generate('admin'));
+        }
+
+        // Rediriger vers la page home si l'utilisateur n'a pas le rôle ROLE_ADMIN
+        return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 
     protected function getLoginUrl()

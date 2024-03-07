@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=UsersRepository::class)
  * @UniqueEntity(fields={"email"}, message="Cet email est déjà utilisé.")
  */
-class Users implements UserInterface 
+class Users implements UserInterface  
 {
     // Existing code...
     /**
@@ -69,14 +69,15 @@ class Users implements UserInterface
     private $Role = [];
 
     /**
-     * @ORM\OneToMany(targetEntity=Tasks::class, mappedBy="userId")
+     * @ORM\ManyToMany(targetEntity=Company::class, mappedBy="userId")
      */
-    private $tasks;
+    private $companies;
 
     public function __construct()
     {
-        $this->tasks = new ArrayCollection();
+        $this->companies = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -118,6 +119,17 @@ class Users implements UserInterface
 
         return $this;
     }
+
+      /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
 
     public function getNumberSiret(): ?string
     {
@@ -179,22 +191,7 @@ class Users implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Tasks>
-     */
-    public function getTasks(): Collection
-    {
-        return $this->tasks;
-    }
-
-    public function addTask(Tasks $task): self
-    {
-        if (!$this->tasks->contains($task)) {
-            $this->tasks[] = $task;
-        }
-
-        return $this;
-    }
+   
 
     public function getSalt()
     {
@@ -208,6 +205,33 @@ class Users implements UserInterface
         // Add your logic here if needed
         // For example, if you're storing plain text passwords temporarily, you can clear them here
         // Otherwise, you can leave this method empty
+    }
+
+    /**
+     * @return Collection<int, Company>
+     */
+    public function getCompanies(): Collection
+    {
+        return $this->companies;
+    }
+
+    public function addCompany(Company $company): self
+    {
+        if (!$this->companies->contains($company)) {
+            $this->companies[] = $company;
+            $company->addUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompany(Company $company): self
+    {
+        if ($this->companies->removeElement($company)) {
+            $company->removeUserId($this);
+        }
+
+        return $this;
     }
 }
 

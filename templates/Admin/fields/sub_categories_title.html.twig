@@ -1,0 +1,15 @@
+<div class="sub-categorie-admin" style="
+    text-align: left;
+">
+    {% for subCategorie in entity.instance.SubCategories %}
+        {% if loop.first %}
+            {{ subCategorie.subcategName }}
+        {% endif %}
+        {% if loop.last %}
+            {% if not loop.first %}
+                {% set remainingCount = loop.length - 1 %}
+             <div class="Autre-sub-categorie-admin " style="padding: 5px;background-color: #a3a3a3;height: max-content;border-radius: 12px;color: white;">  +{{remainingCount}} autre(s) sous-catégorie(s)</div> 
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</div>
