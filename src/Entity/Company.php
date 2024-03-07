@@ -39,9 +39,15 @@ class Company
      */
     private $userId;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UsersStandard::class, mappedBy="companyCurrent",  cascade={"persist"})
+     */
+    private $usersStandards;
+
     public function __construct()
     {
         $this->userId = new ArrayCollection();
+        $this->usersStandards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,5 +113,41 @@ class Company
         $this->userId->removeElement($userId);
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, UsersStandard>
+     */
+    public function getUsersStandards(): Collection
+    {
+        return $this->usersStandards;
+    }
+
+    public function addUsersStandard(UsersStandard $usersStandard): self
+    {
+        if (!$this->usersStandards->contains($usersStandard)) {
+            $this->usersStandards[] = $usersStandard;
+            $usersStandard->setCompanyCurrent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUsersStandard(UsersStandard $usersStandard): self
+    {
+        if ($this->usersStandards->removeElement($usersStandard)) {
+            // set the owning side to null (unless already changed)
+            if ($usersStandard->getCompanyCurrent() === $this) {
+                $usersStandard->setCompanyCurrent(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString(): string
+    {
+        // return a string representation of the Company object
+        // for example, you might return the company's name
+        return $this->logo;
     }
 }

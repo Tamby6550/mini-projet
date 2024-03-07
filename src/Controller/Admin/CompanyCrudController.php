@@ -3,21 +3,18 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Company;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
-use App\Controller\Admin\SearchDto;
-use App\Controller\Admin\EntityDto;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto as DtoEntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto as DtoSearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
-
-
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use App\Form\UserStandardType;
 
 class CompanyCrudController extends AbstractCrudController
 {
@@ -28,14 +25,17 @@ class CompanyCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            TextField::new('logo'),
-            TextEditorField::new('turnover'),
-            TextEditorField::new('website'),
-            //Add the user role ROLE_USER form the choice list the User entity
-            
 
-        ];
+        yield FormField::addTab('Information Entreprise');
+        yield TextField::new('logo');
+        yield TextEditorField::new('turnover');
+        yield TextEditorField::new('website');
+        yield FormField::addTab('Information employé');
+        yield CollectionField::new('usersStandards')
+            ->setEntryType(UserStandardType::class)
+            ->setFormTypeOptions([
+                'by_reference' => false,
+            ]);
     }
 
     public function configureCrud(Crud $crud): Crud
