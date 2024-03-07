@@ -1,0 +1,86 @@
+{# import base.html.twig #}
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Inscription !
+{% endblock %}
+{% block headers %}{% endblock %}
+
+{% block body %}
+	<style>
+		.example-wrapper {
+			text-align: center;
+			width: 800px;
+			height: auto;
+			margin: 0 auto;
+		}
+		.login-form {
+			border: 1px solid #ccc;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+			padding: 20px;
+			margin-bottom: 20px;
+		}
+		.error-message {
+			color: red;
+			font-size: 14px;
+			margin-top: 5px;
+		}
+	</style>
+
+	<div class="example-wrapper">
+		<h1>Inscription</h1>
+		<p>Créez votre compte pour accéder à l'ensemble de nos services</p>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 offset-md-3 login-form">
+					{{ form_start(form) }}
+					<div class="form-group">
+						{{ form_label(form.username, 'Nom d\'utilisateur *') }}
+                    {{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Nom d\'utilisateur *'}}) }}
+
+						<div class="error-message">{{ form_errors(form.username) }}</div>
+
+					</div>
+					<div class="form-group">
+						{{ form_label(form.password.first, 'Mot de passe') }}
+						{{ form_widget(form.password.first, {'attr': {'class': 'form-control'}}) }}
+						<div class="error-message">{{ form_errors(form.password.first) }}</div>
+					</div>
+					<div class="form-group">
+						{{ form_label(form.password.second, 'Confirmer le mot de passe') }}
+						{{ form_widget(form.password.second, {'attr': {'class': 'form-control'}}) }}
+						<div class="error-message">{{ form_errors(form.password.second) }}</div>
+					</div>
+					<div class="form-group">
+						{{ form_label(form.email, 'Email *') }}
+						{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email *'}}) }}
+						<div class="error-message">{{ form_errors(form.email) }}</div>
+					</div>
+					<div class="form-group">
+						<div class="error-message">{{ form_errors(form.number_siret) }}</div>
+						{{ form_label(form.number_siret, 'Numéro SIRET') }}
+						{{ form_widget(form.number_siret, {'attr': {'class': 'form-control', 'placeholder': 'Numéro SIRET'}}) }}
+					</div>
+					<div class="form-group">
+						<div class="error-message">{{ form_errors(form.phone_number) }}</div>
+						{{ form_label(form.phone_number, 'Numéro de téléphone') }}
+						{{ form_widget(form.phone_number, {'attr': {'class': 'form-control', 'placeholder': 'Numéro de téléphone'}}) }}
+					</div>
+					<div class="form-group">
+						<div class="error-message">{{ form_errors(form.name_company) }}</div>
+						{{ form_label(form.name_company, 'Nom de l\'entreprise') }}
+                    {{ form_widget(form.name_company, {'attr': {'class': 'form-control', 'placeholder': 'Nom de l\'entreprise'}}) }}
+					</div>
+					<div class="form-group">
+						<div class="error-message">{{ form_errors(form.company_phone_number) }}</div>
+						{{ form_label(form.company_phone_number, 'Numéro de téléphone de l\'entreprise') }}
+                        {{ form_widget(form.company_phone_number, {'attr': {'class': 'form-control', 'placeholder': 'Numéro de téléphone de l\'entreprise'}}) }}
+					</div>
+					{{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary'}}) }}
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
